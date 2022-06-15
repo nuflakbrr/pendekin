@@ -3,8 +3,10 @@ import { useState } from "react";
 import classNames from "classnames";
 import { nanoid } from "nanoid";
 import debounce from "lodash/debounce";
-import { trpc } from "../../utils/trpc";
 import copy from "copy-to-clipboard";
+
+import { trpc } from "../../utils/trpc";
+import Footer from "./Footer";
 
 type Form = {
   slug: string;
@@ -58,72 +60,75 @@ const CreateLinkForm: NextPage = () => {
   }
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        createSlug.mutate({ ...form });
-      }}
-      className="flex flex-col justify-center h-screen w-5/6 md:w-1/2 lg:w-1/2"
-    >
-      {slugCheck.data?.used && (
-        <span className="font-medium mr-2 text-center text-red-500">
-          Slug already in use.
-        </span>
-      )}
-      <div className="flex flex-col justify-center items-center mx-auto text-center my-4">
-        <h1 className="font-mono font-black text-4xl leading-7 bg-white text-black p-2">Pendekin Link.</h1>
-        <span className="font-sans font-light text-base leading-7">Solusi Cepat Memangkas Tautan Panjang!</span>
-      </div>
-      <div className="flex items-center">
-        <span className="font-medium mr-8 xl:mr-2 min-w-0 xl:min-w-fit">{url}/</span>
+    <>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          createSlug.mutate({ ...form });
+        }}
+        className="flex flex-col justify-center h-screen w-5/6 md:w-1/2 lg:w-1/2"
+      >
+        {slugCheck.data?.used && (
+          <span className="font-medium mr-2 text-center text-red-500">
+            Slug already in use.
+          </span>
+        )}
+        <div className="flex flex-col justify-center items-center mx-auto text-center my-4">
+          <h1 className="font-mono font-black text-4xl leading-7 bg-white text-black p-2">Pendekin Link.</h1>
+          <span className="font-sans font-light text-base leading-7">Solusi Cepat Memangkas Tautan Panjang!</span>
+        </div>
+        <div className="flex items-center">
+          <span className="font-medium mr-8 xl:mr-2 min-w-0 xl:min-w-fit">{url}/</span>
+          <input
+            type="text"
+            onChange={(e) => {
+              setForm({
+                ...form,
+                slug: e.target.value,
+              });
+              debounce(slugCheck.refetch, 100);
+            }}
+            minLength={1}
+            placeholder="rothaniel"
+            className={slugInput}
+            value={form.slug}
+            pattern={"^[-a-zA-Z0-9]+$"}
+            title="Only alphanumeric characters and hypens are allowed. No spaces."
+            required
+          />
+          <input
+            type="button"
+            value="Random"
+            className="rounded bg-sky-500 py-1.5 px-1 font-bold cursor-pointer ml-2"
+            onClick={() => {
+              const slug = nanoid();
+              setForm({
+                ...form,
+                slug,
+              });
+              slugCheck.refetch();
+            }}
+          />
+        </div>
+        <div className="flex items-center">
+          <span className="font-medium mr-2">Link</span>
+          <input
+            type="url"
+            onChange={(e) => setForm({ ...form, url: e.target.value })}
+            placeholder="https://google.com"
+            className={input}
+            required
+          />
+        </div>
         <input
-          type="text"
-          onChange={(e) => {
-            setForm({
-              ...form,
-              slug: e.target.value,
-            });
-            debounce(slugCheck.refetch, 100);
-          }}
-          minLength={1}
-          placeholder="rothaniel"
-          className={slugInput}
-          value={form.slug}
-          pattern={"^[-a-zA-Z0-9]+$"}
-          title="Only alphanumeric characters and hypens are allowed. No spaces."
-          required
+          type="submit"
+          value="Create"
+          className="rounded bg-sky-500 p-1 font-bold cursor-pointer mt-1"
+          disabled={slugCheck.isFetched && slugCheck.data!.used}
         />
-        <input
-          type="button"
-          value="Random"
-          className="rounded bg-sky-500 py-1.5 px-1 font-bold cursor-pointer ml-2"
-          onClick={() => {
-            const slug = nanoid();
-            setForm({
-              ...form,
-              slug,
-            });
-            slugCheck.refetch();
-          }}
-        />
-      </div>
-      <div className="flex items-center">
-        <span className="font-medium mr-2">Link</span>
-        <input
-          type="url"
-          onChange={(e) => setForm({ ...form, url: e.target.value })}
-          placeholder="https://google.com"
-          className={input}
-          required
-        />
-      </div>
-      <input
-        type="submit"
-        value="Create"
-        className="rounded bg-sky-500 p-1 font-bold cursor-pointer mt-1"
-        disabled={slugCheck.isFetched && slugCheck.data!.used}
-      />
-    </form>
+      </form>
+      <Footer />
+    </>
   );
 };
 
