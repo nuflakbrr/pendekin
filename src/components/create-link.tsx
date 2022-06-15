@@ -63,7 +63,7 @@ const CreateLinkForm: NextPage = () => {
         e.preventDefault();
         createSlug.mutate({ ...form });
       }}
-      className="flex flex-col justify-center h-screen sm:w-2/3 md:w-1/2 lg:w-1/3"
+      className="flex flex-col justify-center h-screen w-5/6 md:w-1/2 lg:w-1/2"
     >
       {slugCheck.data?.used && (
         <span className="font-medium mr-2 text-center text-red-500">
