@@ -71,7 +71,7 @@ const CreateLinkForm: NextPage = () => {
         </span>
       )}
       <div className="flex items-center">
-        <span className="font-medium mr-2">{url}/</span>
+        <span className="font-medium mr-8 xl:mr-2 min-w-0 xl:min-w-fit">{url}/</span>
         <input
           type="text"
           onChange={(e) => {
