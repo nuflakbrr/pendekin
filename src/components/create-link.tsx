@@ -70,6 +70,10 @@ const CreateLinkForm: NextPage = () => {
           Slug already in use.
         </span>
       )}
+      <div className="flex flex-col justify-center items-center mx-auto text-center my-4">
+        <h1 className="font-mono font-black text-4xl leading-7 bg-white text-black p-2">Pendekin Link.</h1>
+        <span className="font-sans font-light text-base leading-7">Solusi Cepat Memangkas Tautan Panjang!</span>
+      </div>
       <div className="flex items-center">
         <span className="font-medium mr-8 xl:mr-2 min-w-0 xl:min-w-fit">{url}/</span>
         <input
